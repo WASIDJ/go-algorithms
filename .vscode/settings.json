@@ -1,0 +1,8 @@
+{
+    "cmake.sourceDirectory": "/Users/ryou/workspace/INTERNSHIP/go-algorithms/lc-plugin-template/cpp-template",
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+        "file": ".github/commit-convention.md"
+    }
+    ]
+}
