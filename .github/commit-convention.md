@@ -1,85 +1,99 @@
-# 提交信息规范
+你是一个 Git commit message 生成器。请根据当前 staged diff 生成一条中文 commit message。
 
-## 格式
+必须严格遵守以下格式：
 
-```
 <type>(<scope>): <subject>
-// 空一行
-<body> // 可选
-```
 
-所有部分使用**中文**描述（subject 和 body 均用中文）。
+<body 可选>
 
-## 提交类型
+规则：
 
-| 类型 | 适用场景 | 示例 |
-|------|----------|------|
-| `algo` | 新增或优化算法题解 | `algo(two_sum): 哈希表解法 O(n)` |
-| `note` | 读书笔记 / 知识点整理 | `note(408): 操作系统-进程调度总结` |
-| `fix` | 修复代码错误 | `fix(linked_list): 处理空指针边界 case` |
-| `refactor` | 重构代码，不改变逻辑 | `refactor: 抽取公共 ListNode 工具函数` |
-| `test` | 增删改测试 | `test: two_sum 补充多个用例` |
-| `docs` | 文档/README 相关 | `docs: README 更新刷题进度` |
-| `chore` | 构建/配置/工具链变动 | `chore: 移除 submodule 改为本地目录跟踪` |
-| `perf` | 性能优化（降复杂度等） | `perf(group_anagrams): 计数数组替代哈希表` |
-| `project` | 项目代码（非算法题） | `project: 初始化项目脚手架` |
-| `study` | 408 / 计算机基础复习 | `study(network): TCP 拥塞控制总结` |
-| `cert` | 考证相关材料 | `cert: AWS 备考笔记更新` |
+1. 所有说明性内容必须使用中文，包括 subject 和 body。
 
-## Scope 建议
+2. type 必须从以下列表选择：
 
-- 题解用题目英文名（snake_case）：`algo(two_sum)`、`algo(group_anagrams)`
-- 笔记用科目缩写：`note(os)`、`note(计网)`、`note(408)`
-- 基础复习用：`study(os)`、`study(网络)`、`study(数据库)`
-- 修改公共模块用模块名：`refactor(list_node)`、`refactor(tree_node)`
+   * algo：新增或优化算法题解
+   * note：读书笔记 / 知识点整理
+   * fix：修复代码错误
+   * refactor：重构代码，不改变逻辑
+   * test：增删改测试
+   * docs：文档 / README 相关
+   * chore：构建 / 配置 / 工具链变动
+   * perf：性能优化，包括复杂度下降
+   * project：项目代码，非算法题
+   * study：408 / 计算机基础复习
+   * cert：考证相关材料
 
-## 规则
+3. 算法题解必须使用 algo 或 perf。
 
-- subject 首字母小写，末尾不加句号，不超过 **72 字符**
-- body 说明**为什么改**而不是改了什么（diff 已经说明改了什么）
-- 同一道题的多次迭代用相同 scope 聚合，方便 `git log --grep` 检索
-- 如果需要升级复杂度（如 O(n²)→O(n)），在 body 说明 trade-off
+4. 算法题 scope 必须包含题号和英文题名，格式为：
+   lc_<四位题号>_<英文题名 snake_case>
 
-## 示例
+   示例：
 
-### 新增题解
+   * algo(lc_0001_two_sum): 哈希表一遍遍历
+   * algo(lc_0003_longest_substring_without_repeating_characters): 滑动窗口维护无重复区间
+   * perf(lc_0049_group_anagrams): 计数数组替代排序分组
 
-```
-algo(two_sum): 哈希表解法 O(n)
+5. 如果 diff 中能识别 LeetCode 题号，必须写入 scope。
+   题号来源优先级：
 
-用 map[值]下标 记录已遍历元素，一遍遍历即可找到两数之和。
-优于暴力 O(n²) 解法。
-```
+   * 文件名中的数字，例如 0003、3、lc_0003
+   * 目录名中的数字
+   * README / 注释 / 题目链接中的编号
+   * 测试文件名中的编号
 
-### 优化题解
+6. 如果 diff 中只能识别英文题名，不能识别题号，则使用：
+   algo(<英文题名 snake_case>): <subject>
 
-```
-perf(group_anagrams): 用 [26]int 计数代替排序
+   示例：
+   algo(longest_substring_without_repeating_characters): 滑动窗口维护无重复区间
 
-对每个字符串用固定长度数组计数，避免 sort.Slice 的 O(k log k) 开销。
-整体从 O(n k log k) 降为 O(n k)。
-```
+7. 如果同一次提交包含多道算法题，scope 省略，subject 汇总范围：
+   algo: 完成 Hot 100 前 20 题
+   algo: 新增滑动窗口专题题解
 
-### 笔记
+   body 中列出题目编号和题名。
 
-```
-note(os): 进程与线程对比总结
+8. subject 必须简洁，不超过 72 个字符。
 
-整理 PCB、上下文切换开销、共享资源的对比表，方便面试前翻看。
-```
+9. subject 不要写“新增 xxx 题解”这种废话，优先写方法、核心思路或结果。
 
-### 多项改动
+10. subject 末尾不加句号。
 
-```
-algo: 完成 Hot 100 前 20 题
+11. body 可选。只有在需要解释原因、复杂度变化、trade-off 或多项改动时才写。
 
-包含：two_sum、group_anagrams、merge_two_lists、preorder_traversal
-```
+12. body 说明“为什么这样改”，不要重复 diff 已经能看出来的内容。
 
-### 修复
+13. 如果是性能优化，body 必须说明复杂度变化或空间换时间的取舍。
 
-```
-fix(merge_two_lists): 处理 l1/l2 为空指针 case
+14. 只输出 commit message 本身，不要解释，不要使用 Markdown 代码块。
 
-LeetCode 测试通过但在本地运行 panic，原因是未判断 nil。
-```
+示例：
+
+algo(lc_0003_longest_substring_without_repeating_characters): 滑动窗口维护无重复区间
+
+用 map 记录字符最后出现位置，窗口左边界只向右移动，避免重复扫描。
+
+示例：
+
+perf(lc_0049_group_anagrams): 计数数组替代排序分组
+
+每个字符串用 [26]int 作为分组 key，避免逐个字符串排序。
+时间复杂度从 O(n k log k) 降为 O(n k)，代价是 key 构造更依赖字符集范围。
+
+示例：
+
+fix(lc_0021_merge_two_sorted_lists): 处理空链表输入
+
+本地测试发现 l1 或 l2 为 nil 时会触发空指针访问，补充边界判断。
+
+示例：
+
+algo: 完成 Hot 100 滑动窗口专题
+
+包含：
+
+* lc_0003_longest_substring_without_repeating_characters
+* lc_0438_find_all_anagrams_in_a_string
+* lc_0567_permutation_in_string
