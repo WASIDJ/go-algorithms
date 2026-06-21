@@ -3,5 +3,6 @@
     {
       "file": ".github/commit-convention.md"
     }
-  ]
+  ],
+  "cmake.ignoreCMakeListsMissing": true
 }
