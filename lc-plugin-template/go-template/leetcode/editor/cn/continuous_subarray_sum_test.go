@@ -11,7 +11,26 @@ import "testing"
 
 // @lc code=start
 func checkSubarraySum(nums []int, k int) bool {
-	return true
+	// 思路 preSum
+	n := len(nums)
+	preSum := make([]int, n+1)
+	preSum[0] = 0
+	for i := 1; i <= n; i++ {
+		preSum[i] = preSum[i-1] + nums[i-1]
+	}
+	val2idx := make(map[int]int)
+	for i := 0; i < len(preSum); i++ {
+		val := preSum[i] % k
+		if idx, ok := val2idx[val]; ok {
+			if i-idx >= 2 {
+				return true
+			}
+		} else {
+			val2idx[val] = i
+		}
+	}
+
+	return false
 }
 
 // @lc code=end

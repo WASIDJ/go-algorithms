@@ -11,24 +11,21 @@ import "testing"
 
 // @lc code=start
 func subarraySum(nums []int, k int) int {
-	// 滑动窗口
-
-	res, sum := 0, 0
-	left, right := 0, 0
-	// 扩大
-	for right < len(nums) {
-		sum = sum + nums[right]
-		right++
-		for sum >= k {
-			if sum == k {
-				res++
-			}
-			sum = sum - nums[left]
-			left++
+	// preSum
+	n := len(nums)
+	preSum := make(map[int]int, n+1)
+	preSum[0] = 0
+	count := make(map[int]int)
+	count[0] = 1
+	res := 0
+	for i := 1; i <= n; i++ {
+		preSum[i] = preSum[i-1] + nums[i-1]
+		need := preSum[i] - k
+		if _, ok := count[need]; ok {
+			res = res + count[need]
 		}
+		count[preSum[i]]++
 	}
-	// 缩小
-	// 需要什么
 	return res
 }
 
